@@ -56,9 +56,11 @@ const PORT = 5000;
 // Enable CORS for all routes
 // app.use(cors({ origin: "*" })); // Allow requests from your React app
 app.use(cors({ origin: true }));
-
 // Middleware to parse JSON bodies
 app.use(express.json());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+}); 
 
 // Define the API endpoint to handle requests to Clarifai
 app.post("/api/analyze", async (req, res) => {
