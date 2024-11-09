@@ -58,12 +58,10 @@ const PORT = 5000;
 app.use(cors({ origin: true }));
 // Middleware to parse JSON bodies
 app.use(express.json());
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-}); 
 
 // Define the API endpoint to handle requests to Clarifai
 app.post("/api/analyze", async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*");
   const { modelId, modelVersionId, user_app_id, inputs } = req.body;
 
   console.log("Request Body:", req.body); // Log the request body
