@@ -51,11 +51,11 @@ const fetch = require("node-fetch");
 const cors = require("cors");
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Enable CORS for all routes
 // app.use(cors({ origin: "*" })); // Allow requests from your React app
-app.use(cors({ origin: true }));
+app.use(cors({ origin: "*" }));
 // Middleware to parse JSON bodies
 app.use(express.json());
 
