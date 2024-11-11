@@ -4,6 +4,9 @@ const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const USER_ID = "clarifai";
+const APP_ID = "main";
+// Change these to whatever model and image URL you want to use
 
 // Enable CORS for all routes
 // app.use(cors({ origin: "*" })); // Allow requests from your React app
@@ -14,8 +17,16 @@ app.use(express.json());
 // Define the API endpoint to handle requests to Clarifai
 app.post("/api/analyze", async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
-  const { modelId, modelVersionId, user_app_id, inputs } = req.body;
-
+  // const { modelId, modelVersionId, user_app_id, inputs } = req.body;
+  const { inputs } = req.body;
+  const MODEL_ID = "face-detection";
+  const MODEL_VERSION_ID = "6dc7e46bc9124c5c8824be4822abe105";
+  const modelId = MODEL_ID;
+  const modelVersionId = MODEL_VERSION_ID;
+  const user_app_id = {
+    user_id: USER_ID,
+    app_id: APP_ID,
+  };
   console.log("Request Body:", req.body); // Log the request body
 
   try {
@@ -33,7 +44,7 @@ app.post("/api/analyze", async (req, res) => {
         }),
       }
     );
-    console.log(response);
+    // console.log(response);
 
     if (!response.ok) {
       const errorText = await response.text(); // Get the response text for debugging
