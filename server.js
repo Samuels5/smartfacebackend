@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
   res.send(database.users);
 });
 app.post("/signin", (req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
   //   bcrypt.compare('ann', "$2a$10$Yt1VePa988conRklfqJNYe8l.e7vS8azbI1upNdy3yIkdesC/Lgk2", function(err, res){
   //   console.log('first guess', res)
   // });
