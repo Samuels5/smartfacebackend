@@ -24,9 +24,50 @@ const db = knex({
 // db.select("*").from('users').then(data => console.log(data))
 // db.select("*").from("login").then((data) => console.log(data));
 
+// async function createTables() {
+//   try {
+//     // Check and create users table
+//     const usersExists = await db.schema.hasTable("users");
+//     if (!usersExists) {
+//       await db.schema.createTable("users", (table) => {
+//         table.increments("id").primary(); // Auto-incrementing primary key
+//         table.string("name", 100).notNullable(); // Name column
+//         table.text("email").unique().notNullable(); // Email column
+//         table.bigInteger("entries").defaultTo(0); // Entries column
+//         table.timestamp("joined").notNullable(); // Joined timestamp
+//       });
+//       console.log("Users table created successfully.");
+//     } else {
+//       console.log("Users table already exists.");
+//     }
+
+//     // Check and create login table
+//     const loginExists = await db.schema.hasTable("login");
+//     if (!loginExists) {
+//       await db.schema.createTable("login", (table) => {
+//         table.increments("id").primary(); // Auto-incrementing primary key
+//         table.text("email").unique().notNullable(); // Email column
+//         table.string("hash", 100).notNullable(); // Hash column for password
+//       });
+//       console.log("Login table created successfully.");
+//     } else {
+//       console.log("Login table already exists.");
+//     }
+//   } catch (err) {
+//     console.error("Error creating tables:", err);
+//   } 
+//   // finally {
+//   //   await db.destroy(); // Close the database connection
+//   // }
+// }
+
+// // Call the function to create the tables
+// createTables();
+
 app.get("/", (req, res) => {
   res.send(db.select("*").from("users"));
 });
+
 app.post("/signin", (req, res) => {
   db.select("email", "hash")
     .from("login")
@@ -78,7 +119,6 @@ app.post("/register", (req, res) => {
           .returning("*")
           .insert({ email: loginemail[0]['email'], name: name, joined: new Date() })
           .then((users) => {
-
             res.json(users[0]);
           });
       })
