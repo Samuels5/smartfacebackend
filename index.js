@@ -4,8 +4,6 @@ const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const USER_ID = "clarifai";
-const APP_ID = "main";
 // Change these to whatever model and image URL you want to use
 
 // Enable CORS for all routes
@@ -16,6 +14,8 @@ app.use(express.json());
 
 // Define the API endpoint to handle requests to Clarifai
 app.post("/api/analyze", async (req, res) => {
+  const USER_ID = "clarifai";
+  const APP_ID = "main";
   res.set("Access-Control-Allow-Origin", "*");
   // const { modelId, modelVersionId, user_app_id, inputs } = req.body;
   const { inputs } = req.body;
