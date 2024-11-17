@@ -19,6 +19,8 @@ const db = knex({
     },
   },
 });
+// postgresql://postgresql:m9cMsv8az0Inu4ss0gWfS2gFKNogXytk@dpg-csroifjqf0us73bqvbsg-a.oregon-postgres.render.com/postgresql_x4c9
+// "https://smartfacebackend.onrender.com"
 // db.select("*").from('users').then(data => console.log(data))
 // db.select("*").from("login").then((data) => console.log(data));
 
@@ -96,6 +98,38 @@ app.put("/image", (req, res) => {
       res.json(entries[0]["entries"]);
     })
     .catch((err) => res.status(400).json("unable to get entries"));
+});
+
+app.put("/update", (req, res) => {
+  const { email, name, password } = req.body; // Extract email, name, and password from request body
+
+  if ((!email) || (!name) || (!password)) {
+    return res.status(400).json("all field required is required");
+  }
+
+  const hash = bcrypt.hashSync(password); // Hash the new password
+
+  db.transaction((trx) => {
+    trx("login")
+      .where({ email: email })
+      .update({hash: hash }) // Update email and hash in the login table
+      .then(() => {
+        return trx("users")
+        .returning("*")
+        .where({ email: email })
+        .update({ name: name }) // Update name in the users table
+        .then((users) => {
+            res.json(users[0]);
+          });
+      })
+      .then(trx.commit)
+      .catch((err) => {
+        trx.rollback();
+        res.status(400).json("Unable to update user");
+      });
+  })
+    // .then(() => res.json("User updated successfully"))
+    .catch((err) => res.status(400).json("Transaction error"));
 });
 
 app.delete("/delete", (req, res) => {
