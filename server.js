@@ -23,7 +23,7 @@ const db = knex({
 // db.select("*").from("login").then((data) => console.log(data));
 
 app.get("/", (req, res) => {
-  res.send(database.users);
+  res.send(db.select("*").from("users"));
 });
 app.post("/signin", (req, res) => {
   db.select("email", "hash")
@@ -96,6 +96,31 @@ app.put("/image", (req, res) => {
       res.json(entries[0]["entries"]);
     })
     .catch((err) => res.status(400).json("unable to get entries"));
+});
+
+app.delete("/delete", (req, res) => {
+  const { email } = req.body; // Extract email from request body
+
+  if (!email) {
+    return res.status(400).json("Email is required");
+  }
+
+  db.transaction((trx) => {
+    trx
+      .delete()
+      .from("login")
+      .where({ email: email })
+      .then(() => {
+        return trx("users").where({ email: email }).delete();
+      })
+      .then(trx.commit)
+      .catch((err) => {
+        trx.rollback();
+        res.status(400).json("Unable to delete user");
+      });
+  })
+    .then(() => res.json("User deleted successfully"))
+    .catch((err) => res.status(400).json("Transaction error"));
 });
 
 app.listen(process.env.PORT || 3000, () => {
