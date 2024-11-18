@@ -66,7 +66,7 @@ const db = knex({
 // createTables();
 
 app.get("/", (req, res) => {
-  res.send(db.select("*").from("users"));
+  db.select("*").from("users").then((users)=> {res.json(users);});
 });
 
 app.post("/signin", (req, res) => {
