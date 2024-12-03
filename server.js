@@ -10,60 +10,74 @@ const knex = require("knex");
 const db = knex({
   client: "pg",
   connection: {
-    host: "dpg-csroifjqf0us73bqvbsg-a.oregon-postgres.render.com",
+    host: "ep-ancient-paper-a21utm6b.eu-central-1.aws.neon.tech",
     port: 5432,
-    user: "postgresql",
-    password: "m9cMsv8az0Inu4ss0gWfS2gFKNogXytk",
-    database: "postgresql_x4c9",
+    user: "smartbrain_owner",
+    password: "UiTkudoPBm20",
+    database: "smartbrain",
     ssl: {
       rejectUnauthorized: false, // Set to true in production for better security
     },
   },
 });
+// const db = knex({
+//   client: "pg",
+//   connection: {
+//     host: "dpg-csroifjqf0us73bqvbsg-a.oregon-postgres.render.com",
+//     port: 5432,
+//     user: "postgresql",
+//     password: "m9cMsv8az0Inu4ss0gWfS2gFKNogXytk",
+//     database: "postgresql_x4c9",
+//     ssl: {
+//       rejectUnauthorized: false, // Set to true in production for better security
+//     },
+//   },
+// });
+
 // postgresql://postgresql:m9cMsv8az0Inu4ss0gWfS2gFKNogXytk@dpg-csroifjqf0us73bqvbsg-a.oregon-postgres.render.com/postgresql_x4c9
 // "https://smartfacebackend.onrender.com"
 // db.select("*").from('users').then(data => console.log(data))
 // db.select("*").from("login").then((data) => console.log(data));
 
-// async function createTables() {
-//   try {
-//     // Check and create users table
-//     const usersExists = await db.schema.hasTable("users");
-//     if (!usersExists) {
-//       await db.schema.createTable("users", (table) => {
-//         table.increments("id").primary(); // Auto-incrementing primary key
-//         table.string("name", 100).notNullable(); // Name column
-//         table.text("email").unique().notNullable(); // Email column
-//         table.bigInteger("entries").defaultTo(0); // Entries column
-//         table.timestamp("joined").notNullable(); // Joined timestamp
-//       });
-//       console.log("Users table created successfully.");
-//     } else {
-//       console.log("Users table already exists.");
-//     }
+async function createTables() {
+  try {
+    // Check and create users table
+    const usersExists = await db.schema.hasTable("users");
+    if (!usersExists) {
+      await db.schema.createTable("users", (table) => {
+        table.increments("id").primary(); // Auto-incrementing primary key
+        table.string("name", 100).notNullable(); // Name column
+        table.text("email").unique().notNullable(); // Email column
+        table.bigInteger("entries").defaultTo(0); // Entries column
+        table.timestamp("joined").notNullable(); // Joined timestamp
+      });
+      console.log("Users table created successfully.");
+    } else {
+      console.log("Users table already exists.");
+    }
 
-//     // Check and create login table
-//     const loginExists = await db.schema.hasTable("login");
-//     if (!loginExists) {
-//       await db.schema.createTable("login", (table) => {
-//         table.increments("id").primary(); // Auto-incrementing primary key
-//         table.text("email").unique().notNullable(); // Email column
-//         table.string("hash", 100).notNullable(); // Hash column for password
-//       });
-//       console.log("Login table created successfully.");
-//     } else {
-//       console.log("Login table already exists.");
-//     }
-//   } catch (err) {
-//     console.error("Error creating tables:", err);
-//   } 
-//   // finally {
-//   //   await db.destroy(); // Close the database connection
-//   // }
-// }
+    // Check and create login table
+    const loginExists = await db.schema.hasTable("login");
+    if (!loginExists) {
+      await db.schema.createTable("login", (table) => {
+        table.increments("id").primary(); // Auto-incrementing primary key
+        table.text("email").unique().notNullable(); // Email column
+        table.string("hash", 100).notNullable(); // Hash column for password
+      });
+      console.log("Login table created successfully.");
+    } else {
+      console.log("Login table already exists.");
+    }
+  } catch (err) {
+    console.error("Error creating tables:", err);
+  } 
+  // finally {
+  //   await db.destroy(); // Close the database connection
+  // }
+}
 
-// // Call the function to create the tables
-// createTables();
+// Call the function to create the tables
+createTables();
 
 app.get("/", (req, res) => {
   db.select("*").from("users").then((users)=> {res.json(users);});
